@@ -6,7 +6,7 @@ const { listContacts } = require("../../models/contacts");
 
 router.get("/", async (req, res, next) => {
   const contacts = await listContacts();
-  res.json({ status: "success", code: "200", contacts });
+  res.status(200).json({ status: "success", contacts });
 });
 
 router.get("/:contactId", async (req, res, next) => {
