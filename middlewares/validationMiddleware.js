@@ -29,7 +29,7 @@ const updateContactValidation = (req, res, next) => {
       tlds: { allow: ["com", "net"] },
     }),
     phone: Joi.number().integer(),
-  });
+  }).min(1);
 
   const validationResult = schema.validate(req.body);
 
