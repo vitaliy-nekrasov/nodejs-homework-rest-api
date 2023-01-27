@@ -1,8 +1,15 @@
-const { Contacts } = require("../db/contactsSchema");
+const {
+  listContactsService,
+  getContactByIdService,
+  removeContactService,
+  addContactService,
+  updateContactService,
+  updateStatusContactService,
+} = require("../services/contactsService");
 
 const listContacts = async () => {
   try {
-    const data = await Contacts.find({});
+    const data = await listContactsService();
     return data;
   } catch (error) {
     console.log(error);
@@ -11,7 +18,7 @@ const listContacts = async () => {
 
 const getContactById = async (contactId) => {
   try {
-    const contact = await Contacts.findById(contactId);
+    const contact = await getContactByIdService(contactId);
     return contact;
   } catch (error) {
     console.log(error);
@@ -20,7 +27,7 @@ const getContactById = async (contactId) => {
 
 const removeContact = async (contactId) => {
   try {
-    const contact = Contacts.findByIdAndRemove(contactId);
+    const contact = removeContactService(contactId);
     return contact;
   } catch (error) {
     console.log(error);
@@ -36,8 +43,7 @@ const addContact = async (body) => {
       phone: phone.toString(),
       favorite,
     };
-    const contact = new Contacts(newContact);
-    await contact.save();
+    await addContactService(newContact);
     return newContact;
   } catch (error) {
     console.log(error);
@@ -46,10 +52,17 @@ const addContact = async (body) => {
 
 const updateContact = async (contactId, body) => {
   try {
-    const { name, email, phone } = body;
-    await Contacts.findByIdAndUpdate(contactId, {
-      $set: { name, email, phone },
-    });
+    await updateContactService(contactId, body);
+    const updatedContact = await getContactById(contactId);
+    return updatedContact;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const updateStatusContact = async (contactId, body) => {
+  try {
+    await updateStatusContactService(contactId, body);
     const updatedContact = await getContactById(contactId);
     return updatedContact;
   } catch (error) {
@@ -63,4 +76,5 @@ module.exports = {
   removeContact,
   addContact,
   updateContact,
+  updateStatusContact,
 };

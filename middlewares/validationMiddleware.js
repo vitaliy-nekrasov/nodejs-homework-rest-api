@@ -41,4 +41,22 @@ const updateContactValidation = (req, res, next) => {
   next();
 };
 
-module.exports = { addContactValidation, updateContactValidation };
+const updateStatusContactValidation = (req, res, next) => {
+  const schema = Joi.object({
+    favorite: Joi.boolean().required(),
+  }).min(1);
+
+  const validationResult = schema.validate(req.body);
+
+  if (validationResult.error) {
+    return res.status(400).json(validationResult.error.details[0].message);
+  }
+
+  next();
+};
+
+module.exports = {
+  addContactValidation,
+  updateContactValidation,
+  updateStatusContactValidation,
+};
