@@ -10,6 +10,7 @@ const addContactValidation = (req, res, next) => {
       })
       .required(),
     phone: Joi.number().integer().required(),
+    favorite: Joi.boolean().optional(),
   });
 
   const validationResult = schema.validate(req.body);

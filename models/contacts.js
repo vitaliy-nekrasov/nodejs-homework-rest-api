@@ -33,11 +33,12 @@ const removeContact = async (contactId) => {
 
 const addContact = async (body) => {
   try {
-    const { name, email, phone } = body;
+    const { name, email, phone, favorite } = body;
     const newContact = {
       name,
       email,
       phone: phone.toString(),
+      favorite,
     };
     const contact = new Contacts(newContact);
     await contact.save();
@@ -53,7 +54,7 @@ const updateContact = async (contactId, body) => {
     await Contacts.findByIdAndUpdate(contactId, {
       $set: { name, email, phone },
     });
-    const updatedContact = await Contacts.findById(contactId);
+    const updatedContact = await getContactById(contactId);
     return updatedContact;
   } catch (error) {
     console.log(error);
