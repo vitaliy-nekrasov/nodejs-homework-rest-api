@@ -1,8 +1,4 @@
-// const fs = require("fs/promises");
-// const path = require("path");
 const { Contacts } = require("../db/contactsSchema");
-
-// const contactsPath = path.resolve("./models/contacts.json");
 
 const listContacts = async () => {
   try {
