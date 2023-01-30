@@ -43,8 +43,8 @@ const addContact = async (body) => {
       phone: phone.toString(),
       favorite,
     };
-    await addContactService(newContact);
-    return newContact;
+    const addedContact = await addContactService(newContact);
+    return addedContact;
   } catch (error) {
     console.log(error);
   }
@@ -52,8 +52,7 @@ const addContact = async (body) => {
 
 const updateContact = async (contactId, body) => {
   try {
-    await updateContactService(contactId, body);
-    const updatedContact = await getContactById(contactId);
+    const updatedContact = await updateContactService(contactId, body);
     return updatedContact;
   } catch (error) {
     console.log(error);
@@ -62,8 +61,7 @@ const updateContact = async (contactId, body) => {
 
 const updateStatusContact = async (contactId, body) => {
   try {
-    await updateStatusContactService(contactId, body);
-    const updatedContact = await getContactById(contactId);
+    const updatedContact = await updateStatusContactService(contactId, body);
     return updatedContact;
   } catch (error) {
     console.log(error);

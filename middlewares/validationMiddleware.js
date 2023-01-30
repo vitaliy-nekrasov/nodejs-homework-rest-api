@@ -1,19 +1,11 @@
-const Joi = require("joi");
+const {
+  addContactSchema,
+  updateContactSchema,
+  toggleContactFavoriteSchema,
+} = require("../helpers/validationSchemas");
 
 const addContactValidation = (req, res, next) => {
-  const schema = Joi.object({
-    name: Joi.string().alphanum().min(3).max(30).required(),
-    email: Joi.string()
-      .email({
-        minDomainSegments: 2,
-        tlds: { allow: ["com", "net"] },
-      })
-      .required(),
-    phone: Joi.number().integer().required(),
-    favorite: Joi.boolean().optional(),
-  });
-
-  const validationResult = schema.validate(req.body);
+  const validationResult = addContactSchema.validate(req.body);
 
   if (validationResult.error) {
     return res.status(400).json(validationResult.error.details[0].message);
@@ -23,16 +15,7 @@ const addContactValidation = (req, res, next) => {
 };
 
 const updateContactValidation = (req, res, next) => {
-  const schema = Joi.object({
-    name: Joi.string().alphanum().min(3).max(30),
-    email: Joi.string().email({
-      minDomainSegments: 2,
-      tlds: { allow: ["com", "net"] },
-    }),
-    phone: Joi.number().integer(),
-  }).min(1);
-
-  const validationResult = schema.validate(req.body);
+  const validationResult = updateContactSchema.validate(req.body);
 
   if (validationResult.error) {
     return res.status(400).json(validationResult.error.details[0].message);
@@ -41,12 +24,8 @@ const updateContactValidation = (req, res, next) => {
   next();
 };
 
-const updateStatusContactValidation = (req, res, next) => {
-  const schema = Joi.object({
-    favorite: Joi.boolean().required(),
-  }).min(1);
-
-  const validationResult = schema.validate(req.body);
+const toggleContactFavoriteValidation = (req, res, next) => {
+  const validationResult = toggleContactFavoriteSchema.validate(req.body);
 
   if (validationResult.error) {
     return res.status(400).json(validationResult.error.details[0].message);
@@ -58,5 +37,5 @@ const updateStatusContactValidation = (req, res, next) => {
 module.exports = {
   addContactValidation,
   updateContactValidation,
-  updateStatusContactValidation,
+  toggleContactFavoriteValidation,
 };

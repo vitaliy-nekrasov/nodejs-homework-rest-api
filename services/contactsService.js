@@ -18,21 +18,23 @@ const removeContactService = async (contactId) => {
 const addContactService = async (object) => {
   const contact = new Contacts(object);
   await contact.save();
-  return object;
+  return contact;
 };
 
 const updateContactService = async (contactId, body) => {
   const { name, email, phone } = body;
-  await Contacts.findByIdAndUpdate(contactId, {
+  const updatedContact = await Contacts.findByIdAndUpdate(contactId, {
     $set: { name, email, phone },
   });
+  return updatedContact;
 };
 
 const updateStatusContactService = async (contactId, body) => {
   const { favorite } = body;
-  await Contacts.findByIdAndUpdate(contactId, {
+  const updatedStatusContact = await Contacts.findByIdAndUpdate(contactId, {
     $set: { favorite },
   });
+  return updatedStatusContact;
 };
 
 module.exports = {

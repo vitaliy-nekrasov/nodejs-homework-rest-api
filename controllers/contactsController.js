@@ -26,7 +26,7 @@ const addContactController = async (req, res, next) => {
   const newContact = await addContact(req.body);
   if (!newContact) {
     return res.status(404).json({
-      message: `Contact with the same name is already in the database!`,
+      message: `Contact was not found!`,
     });
   }
   return res
@@ -64,23 +64,17 @@ const updateContactController = async (req, res, next) => {
   });
 };
 
-const updateStatusContactController = async (req, res, next) => {
-  const updatingContact = await updateStatusContact(
+const toggleContactFavorite = async (req, res, next) => {
+  const updatedContact = await updateStatusContact(
     req.params.contactId,
     req.body
   );
-  if (Object.keys(req.body).length === 0) {
-    return res.status(400).json({ message: "Missing fields" });
-  }
-  if (!updatingContact) {
+  if (!updatedContact) {
     return res.status(404).json({
       message: `Contact with id = ${req.params.contactId} was not found`,
     });
   }
-  return res.status(200).json({
-    message: `Status of contact with id = ${req.params.contactId} was updated`,
-    contact: updatingContact,
-  });
+  return res.status(200).json(updatedContact);
 };
 
 module.exports = {
@@ -89,5 +83,5 @@ module.exports = {
   addContactController,
   deleteContactController,
   updateContactController,
-  updateStatusContactController,
+  toggleContactFavorite,
 };
