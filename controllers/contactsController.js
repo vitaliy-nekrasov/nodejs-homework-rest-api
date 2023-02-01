@@ -4,6 +4,7 @@ const {
   addContact,
   removeContact,
   updateContact,
+  updateStatusContact,
 } = require("../models/contacts");
 
 const getContactsController = async (req, res, next) => {
@@ -23,6 +24,11 @@ const getContactByIdController = async (req, res, next) => {
 
 const addContactController = async (req, res, next) => {
   const newContact = await addContact(req.body);
+  if (!newContact) {
+    return res.status(404).json({
+      message: `Contact was not found!`,
+    });
+  }
   return res
     .status(201)
     .json({ message: "Added new contact", contact: newContact });
@@ -58,10 +64,24 @@ const updateContactController = async (req, res, next) => {
   });
 };
 
+const toggleContactFavorite = async (req, res, next) => {
+  const updatedContact = await updateStatusContact(
+    req.params.contactId,
+    req.body
+  );
+  if (!updatedContact) {
+    return res.status(404).json({
+      message: `Contact with id = ${req.params.contactId} was not found`,
+    });
+  }
+  return res.status(200).json(updatedContact);
+};
+
 module.exports = {
   getContactsController,
   getContactByIdController,
   addContactController,
   deleteContactController,
   updateContactController,
+  toggleContactFavorite,
 };
