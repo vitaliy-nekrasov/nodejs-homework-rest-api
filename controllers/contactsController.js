@@ -8,12 +8,14 @@ const {
 } = require("../models/contacts");
 
 const getContactsController = async (req, res, next) => {
-  const contacts = await listContacts();
+  const { _id: owner } = req.user;
+  const contacts = await listContacts(owner);
   return res.status(200).json({ contacts });
 };
 
 const getContactByIdController = async (req, res, next) => {
-  const contactById = await getContactById(req.params.contactId);
+  const { _id: owner } = req.user;
+  const contactById = await getContactById(req.params.contactId, owner);
   if (!contactById) {
     return res.status(404).json({
       message: `Contact with id = ${req.params.contactId} was not found`,
@@ -23,7 +25,8 @@ const getContactByIdController = async (req, res, next) => {
 };
 
 const addContactController = async (req, res, next) => {
-  const newContact = await addContact(req.body);
+  const { _id: owner } = req.user;
+  const newContact = await addContact(req.body, owner);
   if (!newContact) {
     return res.status(404).json({
       message: `Contact was not found!`,
@@ -35,7 +38,8 @@ const addContactController = async (req, res, next) => {
 };
 
 const deleteContactController = async (req, res, next) => {
-  const removeContactById = await removeContact(req.params.contactId);
+  const { _id: owner } = req.user;
+  const removeContactById = await removeContact(req.params.contactId, owner);
 
   if (!removeContactById) {
     return res.status(404).json({
@@ -49,7 +53,12 @@ const deleteContactController = async (req, res, next) => {
 };
 
 const updateContactController = async (req, res, next) => {
-  const updatingContact = await updateContact(req.params.contactId, req.body);
+  const { _id: owner } = req.user;
+  const updatingContact = await updateContact(
+    req.params.contactId,
+    req.body,
+    owner
+  );
   if (Object.keys(req.body).length === 0) {
     return res.status(400).json({ message: "Missing fields" });
   }
@@ -65,9 +74,11 @@ const updateContactController = async (req, res, next) => {
 };
 
 const toggleContactFavorite = async (req, res, next) => {
+  const { _id: owner } = req.user;
   const updatedContact = await updateStatusContact(
     req.params.contactId,
-    req.body
+    req.body,
+    owner
   );
   if (!updatedContact) {
     return res.status(404).json({

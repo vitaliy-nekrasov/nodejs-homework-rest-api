@@ -17,11 +17,12 @@ const loginController = async (req, res) => {
       message: "Email or password is wrong",
     });
   }
+  const { updatedUser, token } = user;
   return res.status(200).json({
-    token: user.token,
+    token,
     user: {
-      email: user.updatedUser.email,
-      subscription: user.updatedUser.subscription,
+      email: updatedUser.email,
+      subscription: updatedUser.subscription,
     },
   });
 };
