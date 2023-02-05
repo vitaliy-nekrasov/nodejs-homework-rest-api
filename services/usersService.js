@@ -30,7 +30,42 @@ const loginService = async (email, password) => {
   }
 };
 
+const logoutService = async (id) => {
+  try {
+    const user = await User.findByIdAndUpdate(id, {
+      $set: { token: null },
+    });
+    return user;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const currentUserService = async (id) => {
+  try {
+    const user = await User.findById(id, { email: 1, subscription: 1, _id: 0 });
+    return user;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const changeSubscriptionService = async (id, subscription) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      { _id: id },
+      { $set: { subscription } }
+    );
+    return user;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   signupService,
   loginService,
+  logoutService,
+  currentUserService,
+  changeSubscriptionService,
 };

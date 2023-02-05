@@ -9,7 +9,8 @@ const {
 
 const getContactsController = async (req, res, next) => {
   const { _id: owner } = req.user;
-  const contacts = await listContacts(owner);
+  const { page, limit = 10, favorite } = req.query;
+  const contacts = await listContacts(owner, page, limit, favorite);
   return res.status(200).json({ contacts });
 };
 
@@ -59,9 +60,6 @@ const updateContactController = async (req, res, next) => {
     req.body,
     owner
   );
-  if (Object.keys(req.body).length === 0) {
-    return res.status(400).json({ message: "Missing fields" });
-  }
   if (!updatingContact) {
     return res.status(404).json({
       message: `Contact with id = ${req.params.contactId} was not found`,

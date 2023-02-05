@@ -1,4 +1,10 @@
-const { signupService, loginService } = require("../services/usersService");
+const {
+  signupService,
+  loginService,
+  logoutService,
+  currentUserService,
+  changeSubscriptionService,
+} = require("../services/usersService");
 
 const signupController = async (req, res) => {
   const { email, password } = req.body;
@@ -27,4 +33,32 @@ const loginController = async (req, res) => {
   });
 };
 
-module.exports = { signupController, loginController };
+const logoutController = async (req, res) => {
+  const { _id } = req.user;
+  const user = await logoutService(_id);
+  return res.status(204).json(user);
+};
+
+const currentUserController = async (req, res) => {
+  const { _id } = req.user;
+  const user = await currentUserService(_id);
+  return res.status(200).json({ user });
+};
+
+const changeSubscriptionController = async (req, res) => {
+  const { _id } = req.user;
+  const { subscription } = req.body;
+  if (!subscription) {
+    return res.status(401).json({ message: "Type of subscription not found" });
+  }
+  const user = await changeSubscriptionService(_id, subscription);
+  return res.status(200).json({ user });
+};
+
+module.exports = {
+  signupController,
+  loginController,
+  logoutController,
+  currentUserController,
+  changeSubscriptionController,
+};

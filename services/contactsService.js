@@ -1,7 +1,15 @@
 const { Contacts } = require("../db/contactsSchema");
 
-const listContactsService = async (owner) => {
-  const data = await Contacts.find({ owner });
+const listContactsService = async (owner, page, limit, favorite) => {
+  const data = await Contacts.find({ owner })
+    .skip(limit * page - limit)
+    .limit(limit);
+  if (favorite !== undefined) {
+    const data = await Contacts.find({ owner, favorite: { $eq: favorite } })
+      .skip(limit * page - limit)
+      .limit(limit);
+    return data;
+  }
   return data;
 };
 

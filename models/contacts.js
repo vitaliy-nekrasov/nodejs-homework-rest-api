@@ -7,9 +7,9 @@ const {
   updateStatusContactService,
 } = require("../services/contactsService");
 
-const listContacts = async (owner) => {
+const listContacts = async (owner, page, limit, favorite) => {
   try {
-    const data = await listContactsService(owner);
+    const data = await listContactsService(owner, page, limit, favorite);
     return data;
   } catch (error) {
     console.log(error);
