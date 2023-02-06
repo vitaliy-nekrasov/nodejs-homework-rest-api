@@ -16,9 +16,9 @@ const {
   toggleContactFavoriteValidation,
 } = require("../../middlewares/validationMiddleware");
 
-const { usersMiddleware } = require("../../middlewares/usersMiddleware");
+const { authMiddleware } = require("../../middlewares/authMiddleware");
 
-router.use(usersMiddleware);
+router.use(authMiddleware);
 
 router.get("/", getContactsController);
 

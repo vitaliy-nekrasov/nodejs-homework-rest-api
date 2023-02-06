@@ -13,12 +13,12 @@ const {
   usersValidation,
 } = require("../../middlewares/usersValidationMiddleware");
 
-const { usersMiddleware } = require("../../middlewares/usersMiddleware");
+const { authMiddleware } = require("../../middlewares/authMiddleware");
 
 router.post("/signup", usersValidation, signupController);
 router.post("/login", usersValidation, loginController);
-router.get("/logout", usersMiddleware, logoutController);
-router.get("/current", usersMiddleware, currentUserController);
-router.patch("/subscription", usersMiddleware, changeSubscriptionController);
+router.get("/logout", authMiddleware, logoutController);
+router.get("/current", authMiddleware, currentUserController);
+router.patch("/subscription", authMiddleware, changeSubscriptionController);
 
 module.exports = router;

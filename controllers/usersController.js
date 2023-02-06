@@ -2,7 +2,6 @@ const {
   signupService,
   loginService,
   logoutService,
-  currentUserService,
   changeSubscriptionService,
 } = require("../services/usersService");
 
@@ -23,12 +22,12 @@ const loginController = async (req, res) => {
       message: "Email or password is wrong",
     });
   }
-  const { updatedUser, token } = user;
+  const { loginUser, token } = user;
   return res.status(200).json({
     token,
     user: {
-      email: updatedUser.email,
-      subscription: updatedUser.subscription,
+      email: loginUser.email,
+      subscription: loginUser.subscription,
     },
   });
 };
@@ -40,9 +39,9 @@ const logoutController = async (req, res) => {
 };
 
 const currentUserController = async (req, res) => {
-  const { _id } = req.user;
-  const user = await currentUserService(_id);
-  return res.status(200).json({ user });
+  console.log(req.user);
+  const { email, subscription } = req.user;
+  return res.status(200).json({ email, subscription });
 };
 
 const changeSubscriptionController = async (req, res) => {
