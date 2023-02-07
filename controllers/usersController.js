@@ -39,7 +39,6 @@ const logoutController = async (req, res) => {
 };
 
 const currentUserController = async (req, res) => {
-  console.log(req.user);
   const { email, subscription } = req.user;
   return res.status(200).json({ email, subscription });
 };

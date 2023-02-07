@@ -22,14 +22,17 @@ const loginService = async (email, password) => {
         { _id: user.id, email: user.email, subscription: user.subscription },
         JWT_SECRET
       );
-      const loginUser = await User.findOneAndUpdate(user._id, {
-        $set: { token },
-      });
+      const loginUser = await User.findOneAndUpdate(
+        user._id,
+        {
+          $set: { token },
+        },
+        { new: true }
+      );
       return { loginUser, token };
     }
-    return user;
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
   }
 };
 
