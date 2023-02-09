@@ -1,12 +1,16 @@
 const { User } = require("../db/usersSchema");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const gravatar = require("gravatar");
+require("dotenv").config();
 
 const JWT_SECRET = String(process.env.JWT_SECRET);
+const PORT = process.env.PORT || 3001;
 
 const signupService = async (email, password) => {
   try {
-    const user = new User({ email, password });
+    const avatarURL = gravatar.url(email, { d: "retro" }, true);
+    const user = new User({ email, password, avatarURL });
     await user.save();
     return user;
   } catch (error) {
@@ -59,9 +63,24 @@ const changeSubscriptionService = async (id, subscription) => {
   }
 };
 
+const changeAvatarService = async (id, newAvatarName) => {
+  try {
+    const avatarURL = `http://localhost:${PORT}/avatars/${newAvatarName}`;
+    const user = await User.findByIdAndUpdate(
+      { _id: id },
+      { $set: { avatarURL } },
+      { new: true }
+    );
+    return user;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   signupService,
   loginService,
   logoutService,
   changeSubscriptionService,
+  changeAvatarService,
 };

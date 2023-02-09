@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const JWT_SECRET = String(process.env.JWT_SECRET);
 
@@ -13,15 +14,16 @@ const authMiddleware = (req, res, next) => {
   const [tokenType, token] = req.headers.authorization.split(" ");
   console.log(tokenType);
   try {
-    const user = jwt.verify(token, JWT_SECRET);
-    if (!user) {
-      next(
-        res.status(401).json({
-          message: "Not authorized",
-        })
-      );
-    }
-    req.user = user;
+    jwt.verify(token, JWT_SECRET, (err, decode) => {
+      if (err) {
+        next(
+          res.status(401).json({
+            message: "Not authorized",
+          })
+        );
+      }
+      req.user = decode;
+    });
     next();
   } catch (error) {
     console.log(error);
