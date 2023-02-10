@@ -11,19 +11,17 @@ const authMiddleware = (req, res, next) => {
       })
     );
   }
-  const [tokenType, token] = req.headers.authorization.split(" ");
-  console.log(tokenType);
+  const [, token] = req.headers.authorization.split(" ");
   try {
-    jwt.verify(token, JWT_SECRET, (err, decode) => {
-      if (err) {
-        next(
-          res.status(401).json({
-            message: "Not authorized",
-          })
-        );
-      }
-      req.user = decode;
-    });
+    const user = jwt.verify(token, JWT_SECRET);
+    if (!user) {
+      next(
+        res.status(401).json({
+          message: "Not authorized",
+        })
+      );
+    }
+    req.user = user;
     next();
   } catch (error) {
     console.log(error);
