@@ -1,8 +1,12 @@
+const Jimp = require("jimp");
+const fs = require("fs").promises;
+
 const {
   signupService,
   loginService,
   logoutService,
   changeSubscriptionService,
+  changeAvatarService,
 } = require("../services/usersService");
 
 const signupController = async (req, res) => {
@@ -53,10 +57,27 @@ const changeSubscriptionController = async (req, res) => {
   return res.status(200).json({ user });
 };
 
+const changeAvatarController = async (req, res) => {
+  const { _id } = req.user;
+  const avatarPath = req.file.path;
+  const newAvatarName = `${_id}.${req.file.filename}`;
+
+  Jimp.read(avatarPath, (err, avatar) => {
+    if (err) throw err;
+    avatar.resize(250, 250).write(`public/avatars/${newAvatarName}`, () => {
+      fs.unlink(req.file.path);
+    });
+  });
+
+  const { avatarURL } = await changeAvatarService(_id, newAvatarName);
+  return res.status(200).json({ avatarURL });
+};
+
 module.exports = {
   signupController,
   loginController,
   logoutController,
   currentUserController,
   changeSubscriptionController,
+  changeAvatarController,
 };
